@@ -1,8 +1,10 @@
 # Streichsbaer Tap
 
-## How do I install these formulae?
+## How do I install these formulae and casks?
 
 `brew install streichsbaer/tap/<formula>`
+
+`brew install --cask streichsbaer/tap/<cask>`
 
 Or `brew tap streichsbaer/tap` and then `brew install <formula>`.
 
