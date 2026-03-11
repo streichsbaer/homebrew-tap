@@ -40,7 +40,8 @@ jobs:
       - name: Tap local checkout
         run: |
           brew untap streichsbaer/tap || true
-          brew tap streichsbaer/tap "$GITHUB_WORKSPACE"
+          mkdir -p /opt/homebrew/Library/Taps/streichsbaer
+          ln -s "$GITHUB_WORKSPACE" /opt/homebrew/Library/Taps/streichsbaer/homebrew-tap
 
       - name: Lint cask
         run: brew style --display-cop-names Casks/openscribe.rb
