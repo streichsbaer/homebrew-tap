@@ -1,47 +1,58 @@
-name: brew test-bot
+name: homebrew-cask-ci
 
 on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - Casks/**
+      - README.md
+      - .github/workflows/tests.yml
   push:
     branches:
       - main
-  pull_request:
+    paths:
+      - Casks/**
+      - README.md
+      - .github/workflows/tests.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: homebrew-cask-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test-bot:
-    strategy:
-      matrix:
-        os: [ ubuntu-22.04, macos-15-intel, macos-26 ]
-    runs-on: ${{ matrix.os }}
-    permissions:
-      actions: read
-      checks: read
-      contents: read
-      pull-requests: read
+  validate:
+    runs-on: macos-15
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_FROM_API: "1"
     steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
       - name: Set up Homebrew
-        id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@5b5b9415990a48a7938310ab90c4964bfcb42e89
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Homebrew Bundler RubyGems
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
-        with:
-          path: ${{ steps.set-up-homebrew.outputs.gems-path }}
-          key: ${{ matrix.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
-          restore-keys: ${{ matrix.os }}-rubygems-
+      - name: Tap local checkout
+        run: |
+          brew untap streichsbaer/tap || true
+          brew tap streichsbaer/tap "$GITHUB_WORKSPACE"
 
-      - run: brew test-bot --only-cleanup-before
+      - name: Lint cask
+        run: brew style --display-cop-names Casks/openscribe.rb
 
-      - run: brew test-bot --only-setup
+      - name: Audit cask
+        run: brew audit --strict --online --cask streichsbaer/tap/openscribe
 
-      - run: brew test-bot --only-tap-syntax
-      - run: brew test-bot --only-formulae
-        if: github.event_name == 'pull_request'
+      - name: Install cask
+        run: |
+          brew uninstall --cask openscribe || true
+          brew install --cask --verbose streichsbaer/tap/openscribe
 
-      - name: Upload bottles as artifact
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: bottles_${{ matrix.os }}
-          path: '*.bottle.*'
+      - name: Uninstall cask
+        if: always()
+        run: brew uninstall --cask openscribe || true

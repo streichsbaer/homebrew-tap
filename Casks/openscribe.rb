@@ -5,7 +5,7 @@ cask "openscribe" do
   url "https://github.com/streichsbaer/openscribe/releases/download/v#{version}/OpenScribe-#{version}.zip",
       verified: "github.com/streichsbaer/openscribe/"
   name "OpenScribe"
-  desc "Native macOS menubar dictation app"
+  desc "Menubar dictation app"
   homepage "https://openscribe.dev/"
 
   depends_on arch: :arm64

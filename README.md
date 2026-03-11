@@ -1,20 +1,22 @@
 # Streichsbaer Tap
 
-## How do I install these formulae and casks?
+Homebrew tap for OpenScribe.
 
-`brew install streichsbaer/tap/<formula>`
+## Install
 
-`brew install --cask streichsbaer/tap/<cask>`
-
-Or `brew tap streichsbaer/tap` and then `brew install <formula>`.
-
-Or, in a `brew bundle` `Brewfile`:
-
-```ruby
-tap "streichsbaer/tap"
-brew "<formula>"
+```bash
+brew install --cask streichsbaer/tap/openscribe
 ```
+
+OpenScribe currently requires Apple Silicon and macOS Sequoia or newer.
+
+## Workflow
+
+- Publish the OpenScribe GitHub release first.
+- Update `Casks/openscribe.rb` with the new version and `sha256`.
+- Run local `brew style`, `brew audit`, and install verification before pushing.
 
 ## Documentation
 
-`brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
+- Homebrew tap docs: <https://docs.brew.sh/How-to-Create-and-Maintain-a-Tap>
+- Homebrew cask docs: <https://docs.brew.sh/Cask-Cookbook>
