@@ -1,9 +1,9 @@
 cask "openscribe" do
   arch arm: "arm64", intel: "x86_64"
 
-  version "0.2.9"
-  sha256 arm:   "e6487ecb9868e99bf04b5d86bb993118b4576b9799fef50d342c17ecb6c4fd09",
-         intel: "1c83a8e5c367b3582ede5f9e51a8b4e713ac438a9feab3fb6917f76e2dcea19c"
+  version "0.3.0"
+  sha256 arm:   "21e57543d5c90f05ae360583d57631334887fb45e81e58e493f4e205f9b763a1",
+         intel: "cfb7219547c1f13a8fe2bb0caab8534ac68925a71da6f42cb24cfcf2cfc049fe"
 
   url "https://github.com/streichsbaer/openscribe/releases/download/v#{version}/OpenScribe-#{version}-#{arch}.zip",
       verified: "github.com/streichsbaer/openscribe/"
